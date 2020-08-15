@@ -1127,17 +1127,18 @@ class MsDoc extends AbstractReader implements ReaderInterface
     {
         $posMem = $this->arrayFib['fcPlcfSed'];
         // PlcfSed
-        // PlcfSed : aCP
-        $aCP = array();
-        $aCP[0] = self::getInt4d($this->data1Table, $posMem);
-        $posMem += 4;
-        $aCP[1] = self::getInt4d($this->data1Table, $posMem);
-        $posMem += 4;
-
-        // PlcfSed : aSed
         //@see  : http://msdn.microsoft.com/en-us/library/dd950194%28v=office.12%29.aspx
         $numSed = $this->getNumInLcb($this->arrayFib['lcbPlcfSed'], 12);
+        $numCP = ($this->arrayFib['lcbPlcfSed'] - $numSed * 12) / 4;
 
+        // PlcfSed : aCP
+        $aCP = array();
+        for ($i = 0; $i < $numCP; $i++) {
+            $aCP[$i] = self::getInt4d($this->data1Table, $posMem);
+            $posMem += 4;
+        }
+
+        // PlcfSed : aSed
         $aSed = array();
         for ($iInc = 0; $iInc < $numSed; ++$iInc) {
             // Sed : http://msdn.microsoft.com/en-us/library/dd950982%28v=office.12%29.aspx
